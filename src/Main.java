@@ -13,6 +13,13 @@ public class Main {
     static int [][][] profit =new int [MONTHS][DAYS][COMMS];
     // ======== REQUIRED METHOD LOAD DATA (Students fill this) ========
     public static void loadData() {
+        Scanner reader = null;
+        try {
+            reader = new Scanner ( Paths.get (""))
+            while (reader.hasNextLine()) {}
+            catch (IOException e ) {
+
+            }
     }
 
     // ======== 10 REQUIRED METHODS (Students fill these) ========
@@ -22,7 +29,10 @@ public class Main {
         if (month < 0 || month >= MONTHS) {
             return "INVALID_MONTH";
         }
-        int mostProfitVal = Integer.MIN_VALUE;
+        int mostProfitVal = 0;
+        for (int d =0;d<DAYS;d++){
+            mostProfitVal += profit[month][d][0];
+        }
         int bestCommodity = 0;
         for (int c=0;c<COMMS;c++) {
             int sum = 0;
@@ -50,10 +60,36 @@ public class Main {
     }
 
     public static int commodityProfitInRange(String commodity, int from, int to) {
-        return 1234;
-    }
+        //invalid checks
+        if (commodity == null) {
+            return -99999;
+        }
+        if (from < 1 || from > DAYS || to < 1 || to > DAYS) {
+            return -99999;
+        }
+        if (from > to) {
+            return -99999;
+        }
+        //case-sensitive match
+         int commIndex = -1;
+            for (int i = 0; i < COMMS; i++) {
+                if (commodities[i].equals(commodity)) {
+                    commIndex = i;
+                    break;
+                }
+            }
+            if (commIndex == -1) return -99999;
+            int total = 0;
+            for (int m = 0; m < MONTHS; m++) {
+                for (int d = from; d <= to; d++) {
+                    // days start from 1, but index should start from zero
+                    total += profits[m][d - 1][commIndex];
+                }
+            }
 
-    public static int bestDayOfMonth(int month) {
+            return total;
+        }
+ public static int bestDayOfMonth(int month) {
         if (month < 0 || month >= MONTHS) {
             return -1;
         }
