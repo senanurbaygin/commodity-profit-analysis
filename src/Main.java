@@ -1,5 +1,4 @@
 // Main.java — Students version
-import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -13,16 +12,44 @@ public class Main {
     static int [][][] profit =new int [MONTHS][DAYS][COMMS];
     // ======== REQUIRED METHOD LOAD DATA (Students fill this) ========
     public static void loadData() {
-        Scanner reader = null;
+        for (int m = 0 ; m < MONTHS; m++){
+            Scanner reader = null;
         try {
-            reader = new Scanner ( Paths.get (""))
-            while (reader.hasNextLine()) {}
-            catch (IOException e ) {
+            //open files
+            reader = new Scanner( new java.io.File("Data_Files/" + months[m] + ".txt"));
+            while (reader.hasNextLine()) {
+                // there should be 3 parts: day, commodity, profit
+                String[] p = reader.nextLine().split(",");
+                if (p.length !=3) continue;
 
+                int day;
+                int profitVal; // profit value on that day
+                try {
+                    day=Integer.parseInt(p[0].trim());  // delete spaces and change values from string to int
+                    profitVal =Integer.parseInt(p[2].trim());
+                }catch (Exception e) {
+                    continue;// skip invalid lines
+                }
+                if (day<1 || day>DAYS) continue;
+                for (int c = 0; c < COMMS; c++){    //case-sensitive exact match
+                    if (commodities[c].equals(p[1].trim())){
+                        profit[m][day-1][c]=profitVal;    // [day-1]: 1-28 > 0-27
+                        break;
+                    }
+                }
             }
-    }
+        }catch (Exception e) {
+            //skip invalid files
+        }finally{
+            if (reader != null) {reader.close();
+        }
+        }
+        }
+        }
 
-    // ======== 10 REQUIRED METHODS (Students fill these) ========
+
+
+        // ======== 10 REQUIRED METHODS (Students fill these) ========
 
     public static String mostProfitableCommodityInMonth(int month) {
 
@@ -47,7 +74,7 @@ public class Main {
 
 
     public static int totalProfitOnDay(int month, int day) {
-        if (month<0 || month >= MONTHS){
+        if (month<0 || month >=  MONTHS){
             return -99999;}
         if (day<1 || day > DAYS){
             return -99999;}
@@ -89,7 +116,7 @@ public class Main {
 
             return total;
         }
- public static int bestDayOfMonth(int month) {
+        public static int bestDayOfMonth(int month) {
         if (month < 0 || month >= MONTHS) {
             return -1;
         }
