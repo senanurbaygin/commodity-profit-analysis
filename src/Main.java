@@ -1,4 +1,5 @@
 // Main.java — Students version
+import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -195,7 +196,25 @@ public class Main {
     }
 
     public static int daysAboveThreshold(String comm, int threshold) {
-        return 1234;
+        if (comm==null) {return -1;}   //invalid comm
+        int commIndex=-1;
+        for (int c=0; c<COMMS;c++){
+            if (commodities[c].equals(comm)){
+                commIndex=c;
+                break; //when we find the commodity loop will end
+            }
+        }
+        if (commIndex==-1)  {return -1;}  //invalid comm
+        int count=0;
+           for (int m=0;m<MONTHS;m++){   //checking all days
+               for (int d=0;d<DAYS;d++){
+                   if (profit[m][d][commIndex]>threshold){
+                       count++;
+                   }
+               }
+           }
+
+        return count;
     }
 
     public static int biggestDailySwing(int month) {
