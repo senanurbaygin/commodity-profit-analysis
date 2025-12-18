@@ -95,7 +95,7 @@ public class Main {
         if (from > to)
             return -99999;
         //case-sensitive match
-        int commIndex = -1;   //initial value=-1 commIndex will be updated 
+        int commIndex = -1;   //initial value=-1 commIndex will be updated
         for (int i = 0; i < COMMS; i++) {
             if (commodities[i].equals(commodity)) {
                 commIndex = i;
@@ -136,7 +136,33 @@ public class Main {
         return bestDay;
     }
     public static String bestMonthForCommodity(String comm) {
-        return "DUMMY";
+        if(comm == null) { return  "INVALID_COMMODITY";}   //invalid commodity
+
+        int commIndex = -1; //exact match
+        for (int c=0 ; c<COMMS; c++){
+            if (commodities[c].equals(comm)){
+                commIndex = c ;
+                break;
+            }
+        }
+        if (commIndex ==-1 )  {return "INVALID_COMMODITY";}
+
+         int bestMonthIndex=0; //reference is the first month's index
+         int bestTotal = 0;
+        for (int d=0; d< DAYS;d++){
+            bestTotal+=profit[0][d][commIndex];
+        }
+        for (int m=1; m < MONTHS;m++){
+        int total = 0;
+            for (int d = 0; d<DAYS; d++){
+            total+= profit[m][d][commIndex];
+        }
+        if (total>bestTotal){
+            bestTotal=total;
+            bestMonthIndex=m;
+        }
+        }
+        return months[bestMonthIndex];  // method returns String
     }
 
     public static int consecutiveLossDays(String comm) {
