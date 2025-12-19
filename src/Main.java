@@ -224,13 +224,13 @@ public class Main {
         }
         int total=0;  //total profit on day 0
         for (int c=0;c<COMMS;c++){
-        total+=profit[month][0][c];
+            total+=profit[month][0][c];
         }
         int maxSwing=0;
         for (int d=1;d<DAYS;d++){   //compare consecutive days
             int nextTotal=0;
             for (int c=0;c<COMMS;c++){
-             nextTotal+=profit[month][d][c] ;
+                nextTotal+=profit[month][d][c] ;
             }
             int difference=nextTotal-total;
             if (difference<0) {
@@ -240,12 +240,36 @@ public class Main {
                 maxSwing=difference;
             }
             total=nextTotal; //move to the next day
-            }
+        }
         return maxSwing;
     }
 
     public static String compareTwoCommodities(String c1, String c2) {
-        return "DUMMY is better by 1234";
+        if (c1==null || c2==null){return "INVALID_COMMODITY";} //invalid commodity check
+        int index1=-1;
+        int index2=-1;
+        for (int i=0;i<COMMS;i++){ //exact match
+            if (commodities[i].equals(c1))
+                index1=i;
+            if (commodities[i].equals(c2))
+                index2=i;
+        }
+        if (index1<0||index2<0){
+            return "INVALID_COMMODITY";}
+        int total1=0;
+        int total2=0;
+        for (int m=0;m<MONTHS;m++){   //sum all year' values
+            for (int d=0;d<DAYS;d++){
+                total1+=profit[m][d][index1];
+                total2+=profit[m][d][index2];
+            }
+        }
+        if (total1 >total2){return c1 + " is better by " + (total1-total2);
+        } else if (total1<total2) {
+            return c2 + " is better by " + (total2 - total1);
+        }else {
+            return  "Equal";
+        }
     }
 
     public static String bestWeekOfMonth(int month) {
