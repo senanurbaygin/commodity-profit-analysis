@@ -1,3 +1,4 @@
+
 // Main.java — Students version
 import java.io.*;
 import java.util.*;
@@ -148,20 +149,20 @@ public class Main {
         }
         if (commIndex ==-1 )  {return "INVALID_COMMODITY";}
 
-         int bestMonthIndex=0; //reference is the first month's index
-         int bestTotal = 0;
+        int bestMonthIndex=0; //reference is the first month's index
+        int bestTotal = 0;
         for (int d=0; d< DAYS;d++){
             bestTotal+=profit[0][d][commIndex];
         }
         for (int m=1; m < MONTHS;m++){
-        int total = 0;
+            int total = 0;
             for (int d = 0; d<DAYS; d++){
-            total+= profit[m][d][commIndex];
-        }
-        if (total>bestTotal){
-            bestTotal=total;
-            bestMonthIndex=m;
-        }
+                total+= profit[m][d][commIndex];
+            }
+            if (total>bestTotal){
+                bestTotal=total;
+                bestMonthIndex=m;
+            }
         }
         return months[bestMonthIndex];  // method returns String
     }
@@ -179,20 +180,20 @@ public class Main {
         if (commIndex == -1){return -1;}
         int longestStreak=0;
         int currentStreak=0;
-            // (across whole year)
-            for (int m=0;m<MONTHS;m++){
-                for (int d=0;d<DAYS;d++){
-                    if(profit[m][d][commIndex]<0){
-                        currentStreak++;
-                        if(currentStreak>longestStreak){
-                            longestStreak=currentStreak;
-                        }
-                    }else {
-                        currentStreak = 0; //reset streak
+        // (across whole year)
+        for (int m=0;m<MONTHS;m++){
+            for (int d=0;d<DAYS;d++){
+                if(profit[m][d][commIndex]<0){
+                    currentStreak++;
+                    if(currentStreak>longestStreak){
+                        longestStreak=currentStreak;
                     }
+                }else {
+                    currentStreak = 0; //reset streak
                 }
             }
-                return longestStreak;
+        }
+        return longestStreak;
     }
 
     public static int daysAboveThreshold(String comm, int threshold) {
@@ -206,19 +207,41 @@ public class Main {
         }
         if (commIndex==-1)  {return -1;}  //invalid comm
         int count=0;
-           for (int m=0;m<MONTHS;m++){   //checking all days
-               for (int d=0;d<DAYS;d++){
-                   if (profit[m][d][commIndex]>threshold){
-                       count++;
-                   }
-               }
-           }
+        for (int m=0;m<MONTHS;m++){   //checking all days
+            for (int d=0;d<DAYS;d++){
+                if (profit[m][d][commIndex]>threshold){
+                    count++;
+                }
+            }
+        }
 
         return count;
     }
 
     public static int biggestDailySwing(int month) {
-        return 1234;
+        if (month<0 || month>=MONTHS){  //invalid month chech
+            return  -99999;
+        }
+        int total=0;  //total profit on day 0
+        for (int c=0;c<COMMS;c++){
+        total+=profit[month][0][c];
+        }
+        int maxSwing=0;
+        for (int d=1;d<DAYS;d++){   //compare consecutive days
+            int nextTotal=0;
+            for (int c=0;c<COMMS;c++){
+             nextTotal+=profit[month][d][c] ;
+            }
+            int difference=nextTotal-total;
+            if (difference<0) {
+                difference = -difference; //absolute difference
+            }
+            if (difference>maxSwing){
+                maxSwing=difference;
+            }
+            total=nextTotal; //move to the next day
+            }
+        return maxSwing;
     }
 
     public static String compareTwoCommodities(String c1, String c2) {
