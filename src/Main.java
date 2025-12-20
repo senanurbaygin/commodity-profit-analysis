@@ -273,7 +273,30 @@ public class Main {
     }
 
     public static String bestWeekOfMonth(int month) {
-        return "DUMMY";
+        if (month<0 || month>=MONTHS) {return  "INVALID_MONTH";}
+        int bestWeek=1;
+
+        int week1Total=0;
+        for (int d=0;d<7;d++){ //days from 0 to 6
+            for (int c=0;c<COMMS;c++){
+                week1Total+=profit[month][d][c];
+            }
+        }
+        int bestWeekTotal=week1Total; //reference
+        for (int w=1;w<4;w++){  //weeks from 2 to 4
+            int weekTotal=0;
+            int startDay=w*7;  //7,14,21
+        for (int d=startDay;d<startDay+7;d++){
+            for (int c=0;c<COMMS;c++){
+                weekTotal+=profit[month][d][c];
+            }
+        }
+        if (weekTotal>bestWeekTotal) {
+            bestWeekTotal = weekTotal;
+            bestWeek = w + 1;
+        }
+        }
+        return "Week " + bestWeek;
     }
 
     public static void main(String[] args) {
