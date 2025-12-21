@@ -1,7 +1,7 @@
 
 // Main.java — Students version
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Scanner;
 
 public class Main {
     static final int MONTHS = 12;
@@ -14,40 +14,48 @@ public class Main {
     static int [][][] profit =new int [MONTHS][DAYS][COMMS];
     // ======== REQUIRED METHOD LOAD DATA (Students fill this) ========
     public static void loadData() {
-        for (int m = 0 ; m < MONTHS; m++){
             Scanner reader = null;
             try {
-                //open files
-                reader = new Scanner( new java.io.File("Data_Files/" + months[m] + ".txt"));
-                while (reader.hasNextLine()) {
-                    // there should be 3 parts: day, commodity, profit
-                    String[] p = reader.nextLine().split(",");
-                    if (p.length !=3) continue;
-
-                    int day;
-                    int profitVal; // profit value on that day
-                    try {
-                        day=Integer.parseInt(p[0].trim());  // delete spaces and change values from string to int
-                        profitVal =Integer.parseInt(p[2].trim());
-                    }catch (Exception e) {
-                        continue;// skip invalid lines
+                for (int m = 0 ; m < MONTHS; m++) {
+                    //open files
+                    reader = new Scanner(new java.io.File("Data_Files/" + months[m] + ".txt"));
+                    if (reader.hasNextLine()) {  //skip header line(day,commodit,profit)
+                        reader.nextLine();
                     }
-                    if (day<1 || day>DAYS) continue;
-                    for (int c = 0; c < COMMS; c++){    //case-sensitive exact match
-                        if (commodities[c].equals(p[1].trim())){
-                            profit[m][day-1][c]=profitVal;    // [day-1]: 1-28 > 0-27
-                            break;
+                    while (reader.hasNextLine()) {
+                        // there should be 3 parts: day, commodity, profit
+                        String[] p = reader.nextLine().split(",");
+                        if (p.length != 3) continue;
+
+                        int day;
+                        int profitVal; // profit value on that day
+                        try {
+                            day = Integer.parseInt(p[0].trim());  // delete spaces and change values from string to int
+                            profitVal = Integer.parseInt(p[2].trim());
+                        } catch (Exception e) {
+                            continue;// skip invalid lines
+                        }
+                        if (day < 1 || day > DAYS) continue;
+                        String comm = p[1].trim();
+                        for (int c = 0; c < COMMS; c++) {    //case-sensitive exact match
+                            if (commodities[c].equals(comm)) {
+                                profit[m][day - 1][c] = profitVal;    // [day-1]: 1-28 > 0-27
+                                break;
+                            }
                         }
                     }
+                        reader.close();
+                        reader = null;
                 }
             }catch (Exception e) {
                 //skip invalid files
             }finally{
-                if (reader != null) {reader.close();
+                if (reader != null) {
+                    reader.close();
                 }
             }
-        }
     }
+
 
 
 
@@ -286,15 +294,15 @@ public class Main {
         for (int w=1;w<4;w++){  //weeks from 2 to 4
             int weekTotal=0;
             int startDay=w*7;  //7,14,21
-        for (int d=startDay;d<startDay+7;d++){
-            for (int c=0;c<COMMS;c++){
-                weekTotal+=profit[month][d][c];
+            for (int d=startDay;d<startDay+7;d++){
+                for (int c=0;c<COMMS;c++){
+                    weekTotal+=profit[month][d][c];
+                }
             }
-        }
-        if (weekTotal>bestWeekTotal) {
-            bestWeekTotal = weekTotal;
-            bestWeek = w + 1;
-        }
+            if (weekTotal>bestWeekTotal) {
+                bestWeekTotal = weekTotal;
+                bestWeek = w + 1;
+            }
         }
         return "Week " + bestWeek;
     }
